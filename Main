@@ -1,0 +1,77 @@
+    import java.sql.*;
+    import java.util.Scanner;
+
+    public class BudgetLogger {
+        public static void main(String[] args) {
+            String url = "jdbc:mysql://localhost:3306/budget_app";
+            String user = "root";
+            String password = "Password ";
+
+            Scanner sc = new Scanner(System.in);
+
+            try (Connection conn = DriverManager.getConnection(url, user, password)) {
+                System.out.println("Connected to database.");
+
+                while (true) {
+                    System.out.println("\nChoose an option:");
+                    System.out.println("1. Add expense");
+                    System.out.println("2. View all expenses");
+                    System.out.println("3. Exit");
+
+                    int choice = sc.nextInt();
+                    sc.nextLine();
+
+                    if (choice == 1) {
+                        System.out.print("Enter amount: ");
+                        double amount = sc.nextDouble();
+                        sc.nextLine();
+
+                        System.out.print("Enter description: ");
+                        String description = sc.nextLine();
+
+                        System.out.print("Enter date (YYYY-MM-DD): ");
+                        String date = sc.nextLine();
+
+                        String sql = "INSERT INTO expenses (amount, description, date) VALUES (?, ?, ?)";
+
+                        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                            stmt.setDouble(1, amount);
+                            stmt.setString(2, description);
+                            stmt.setDate(3, Date.valueOf(date));
+                            stmt.executeUpdate();
+                            System.out.println("Expense added.");
+                        }
+
+                    } else if (choice == 2) {
+                        String sql = "SELECT * FROM expenses ORDER BY id ASC";
+
+                        try (Statement stmt = conn.createStatement();
+                            ResultSet rs = stmt.executeQuery(sql)) {
+
+                            System.out.println("\nExpenses:");
+                            while (rs.next()) {
+                                int id = rs.getInt("id");
+                                double amt = rs.getDouble("amount");
+                                String desc = rs.getString("description");
+                                Date dt = rs.getDate("date");
+
+                                System.out.println(id + ": $" + amt + " - " + desc + " on " + dt);
+                            }
+                        }
+
+                    } else if (choice == 3) {
+                        System.out.println("Goodbye!");
+                        break;
+
+                    } else {
+                        System.out.println("Invalid option.");
+                    }
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            sc.close();
+        }
+    }
