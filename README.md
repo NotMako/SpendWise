@@ -10,7 +10,7 @@ Key Capabilities:
 -Real-time querying and analysis of expenses
 - Secure database interaction using JDBC prepared statements
 - Robust error handling and input validation for reliable operation
-- 
+  
 Features:
 - Add, update, and manage expense records
 - Filter, sort, and aggregate financial data
@@ -22,6 +22,6 @@ Technical Stack:
 - Languages: Java (OOP)
  -Database: MySQL
 - Technologies: JDBC, SQL
-- 
+  
 Notes:
 This project focuses on backend system design, database normalization, and secure data handling. It is intended to demonstrate practical experience with building data-driven applications and managing structured data in a reliable and scalable way.
